@@ -69,7 +69,7 @@ Organizar salidas y viajes en moto ("rodadas") suele ser complejo: las rutas, la
 - Carlos Franco Cerutti
 - Marisa Ayelen Arias
 - Susana Mariana Arias
-- Claudia Andres Barros
+
 
 ---
 
