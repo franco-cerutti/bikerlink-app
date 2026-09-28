@@ -1,18 +1,22 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
+// src/app/_layout.tsx
+// Layout raíz de Expo Router. Envuelve a TODAS las pantallas, por eso acá van:
+// - ThemeProvider: comparte el tema (colores) con todos los styled components.
+// - Stack: navegación tipo pila (push agrega una pantalla arriba, back la saca).
+import { Stack } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { ThemeProvider } from 'styled-components/native';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+import { tema } from '../styles/theme';
 
-SplashScreen.preventAutoHideAsync();
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+export default function RootLayout() {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
+    <ThemeProvider theme={tema}>
+      <StatusBar style="dark" />
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="index" />
+        <Stack.Screen name="crear" />
+        <Stack.Screen name="rodada/[id]" />
+      </Stack>
     </ThemeProvider>
   );
 }

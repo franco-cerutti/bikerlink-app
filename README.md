@@ -1,101 +1,87 @@
-<<<<<<< HEAD
-# Welcome to your Expo app 👋
-
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
-
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-### Other setup steps
-
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
-=======
 # BikerLink 🏍️
 
-## Descripción del Proyecto y Problemática
-Organizar salidas y viajes en moto ("rodadas") suele ser complejo: las rutas, las paradas técnicas, el equipamiento necesario y el tipo de experiencia se pierden frecuentemente en chats grupales. Además, durante la ruta es difícil conocer el estado actualizado del camino o coordinar la logística según la duración del viaje.
+## Descripción del proyecto
 
-**BikerLink** es una aplicación móvil diseñada para la comunidad motera que centraliza la planificación de salidas grupales, permite filtrar por tipo de experiencia (escapadas cortas, viajes de varios días, motoencuentros, rutas trail), gestionar paradas técnicas/puntos de encuentro y organizar listas de chequeo pre-viaje de forma colaborativa.
+Cuando se organizan salidas en moto entre varias personas, gran parte de la información termina dispersa en grupos de WhatsApp o redes sociales. Esto genera problemas para coordinar horarios, puntos de encuentro, paradas durante el recorrido y los elementos necesarios para el viaje.
 
----
+**BikerLink** es una aplicación móvil pensada para la comunidad motera que permite organizar y gestionar rodadas de forma simple: crear salidas, consultar la información de las rutas, confirmar asistencia y usar herramientas que facilitan la preparación del viaje.
 
-## Integrantes del Grupo
+## Integrantes del grupo
+
 - Carlos Franco Cerutti
 - Marisa Ayelen Arias
 - Susana Mariana Arias
 
+## Features
 
----
+| # | Feature | Estado |
+|---|---------|--------|
+| 1 | Crear y clasificar una rodada | 🟢 Completada |
+| 2 | Buscar y filtrar salidas | 🟡 En progreso |
+| 3 | Gestión de asistencia | 🟡 En progreso |
+| 4 | Itinerario y paradas | 🔴 Pendiente |
+| 5 | Check-list de preparación | 🔴 Pendiente |
 
-## Listado de Features (Funcionalidades)
+### 1. Crear y clasificar una rodada
 
-### 1. Planificar y Clasificar una Rodada / Viaje
-* **Descripción:** Permite al usuario creador publicar una nueva salida indicando título, fecha/hora, punto de encuentro inicial, destino y la **categoría/tipo de salida** (Vuelta corta del día, Fin de semana / Varios días, Asistencia a Motoencuentro, Travesía Trail) junto con recomendaciones generales.
-* **Estado:** 🔴 Pendiente
+Permite publicar una nueva salida indicando título, tipo de rodada, punto de encuentro, destino, fecha, hora, distancia estimada y recomendaciones. Los tipos disponibles son: Vuelta corta, Fin de semana, Motoencuentro y Trail / Off-Road.
 
-### 2. Explorar y Filtrar Salidas Disponibles
-* **Descripción:** Permite a los moteros buscar y filtrar el catálogo de salidas activas según el **tipo de viaje**, la distancia estimada, la fecha o la zona de partida, facilitando encontrar la rodada que mejor se adapte a su disponibilidad y tipo de motocicleta.
-* **Estado:** 🔴 Pendiente
+**Estado:** 🟢 Completada. El formulario valida los campos obligatorios, que la fecha exista y no sea pasada, el formato de la hora y que la distancia sea un número. Las rodadas se guardan en un estado global (Zustand) y por ahora se pierden al cerrar la app; la persistencia se agregará con AsyncStorage/SQLite.
 
-### 3. Confirmar y Gestionar Asistencia
-* **Descripción:** Los usuarios pueden consultar la ficha detallada de la rodada y confirmar o cancelar su participación. El creador y los participantes pueden visualizar en tiempo real la lista actualizada de moteros confirmados.
-* **Estado:** 🔴 Pendiente
+### 2. Buscar y filtrar salidas
 
-### 4. Diseñar y Consultar el Itinerario con Paradas Técnicas
-* **Descripción:** Definición y visualización de los puntos clave de parada a lo largo de la ruta (estaciones de servicio/combustible, puntos gastronómicos, miradores o peajes), indicando las distancias estimadas entre tramos.
-* **Estado:** 🔴 Pendiente
+Permite explorar las salidas disponibles, buscarlas por texto y filtrarlas por tipo de viaje, fecha, distancia estimada o zona de partida.
 
-### 5. Reportes Colaborativos de Estado de Ruta y Clima
-* **Descripción:** Módulo informativo donde los participantes pueden consultar y reportar novedades preventivas de la ruta elegida (ej. asfalto en mal estado, tramos de ripio, obras en la calzada, alertas de viento fuerte o lluvia).
-* **Estado:** 🔴 Pendiente
+**Estado:** 🟡 En progreso. Implementado: listado ordenado por fecha y filtro por tipo de salida. Pendiente: búsqueda por texto y filtros por fecha, distancia y zona.
 
-### 6. Check-list Pre-Viaje Dinámico
-* **Descripción:** Herramienta interactiva de verificación de equipamiento y mantenimiento preventivo que adapta sus ítems según el tipo de salida seleccionado (ej. kit básico/lluvia para escapadas cortas vs. carpa, herramientas específicas, repuestos y documentación para viajes de varios días o motoencuentros).
-* **Estado:** 🔴 Pendiente
->>>>>>> 3736bb531b31c839ceb5849c14866bac313214d8
+### 3. Gestión de asistencia
+
+Permite consultar el detalle de una salida y confirmar o cancelar la participación. El organizador y los participantes pueden ver la lista actualizada de asistentes.
+
+**Estado:** 🟡 En progreso. Implementado: pantalla de detalle de cada rodada (ruta dinámica `/rodada/[id]`) con la cantidad de confirmados. Pendiente: confirmar/cancelar asistencia y lista de asistentes.
+
+### 4. Itinerario y paradas
+
+Permite definir y consultar las paradas del recorrido (estaciones de servicio, restaurantes, peajes o puntos turísticos) con una estimación de la distancia entre tramos.
+
+**Estado:** 🔴 Pendiente.
+
+### 5. Check-list de preparación
+
+Lista de verificación para preparar la moto y el equipamiento antes de la salida. Los ítems sugeridos varían según el tipo de viaje.
+
+**Estado:** 🔴 Pendiente.
+
+## Tecnologías
+
+- React Native con Expo (SDK 57) y TypeScript
+- Expo Router: navegación Stack y ruta dinámica con parámetros
+- Styled Components con ThemeProvider para los estilos
+- Zustand para el estado global de las rodadas
+- @expo/vector-icons para los íconos
+
+## Cómo ejecutar
+
+```bash
+npm install
+npx expo start
+```
+
+Con el emulador de Android Studio abierto, presionar `a` en la terminal para abrir la app.
+
+## Estructura
+
+```
+src/
+  app/                Rutas de Expo Router
+    _layout.tsx       Stack + ThemeProvider
+    index.tsx         Listado de rodadas  ( / )
+    crear.tsx         Formulario          ( /crear )
+    rodada/[id].tsx   Detalle             ( /rodada/:id )
+  components/         Componentes reutilizables (RodadaCard, Chip, CampoTexto, Encabezado, InfoFila)
+  store/              Estado global con Zustand
+  styles/             Tema de colores
+  data/               Datos de prueba
+  types/              Tipos de TypeScript
+  utils/              Validación y formato de fechas y distancias
+```
