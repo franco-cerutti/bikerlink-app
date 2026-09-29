@@ -46,6 +46,16 @@ export function hoyISO(): string {
   return `${hoy.getFullYear()}-${mes}-${dia}`;
 }
 
+/** Suma (o resta, con n negativo) días a una fecha 'AAAA-MM-DD'. Ej: ('2026-09-29', 5) -> '2026-10-04' */
+export function sumarDias(fechaISO: string, dias: number): string {
+  const [anio, mes, dia] = fechaISO.split('-').map(Number);
+  // new Date se encarga de pasar de mes o de año si hace falta (30/09 + 5 = 05/10).
+  const fecha = new Date(anio, mes - 1, dia + dias);
+  const mm = String(fecha.getMonth() + 1).padStart(2, '0');
+  const dd = String(fecha.getDate()).padStart(2, '0');
+  return `${fecha.getFullYear()}-${mm}-${dd}`;
+}
+
 /** '2026-10-10' + '08:30' -> 'Sáb 10/10/2026 · 08:30 hs' */
 export function formatearFechaHora(fechaISO: string, hora: string): string {
   const [anio, mes, dia] = fechaISO.split('-').map(Number);

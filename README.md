@@ -17,7 +17,7 @@ Cuando se organizan salidas en moto entre varias personas, gran parte de la info
 | # | Feature | Estado |
 |---|---------|--------|
 | 1 | Crear y clasificar una rodada | 🟢 Completada |
-| 2 | Buscar y filtrar salidas | 🟡 En progreso |
+| 2 | Buscar y filtrar salidas | 🟢 Completada |
 | 3 | Gestión de asistencia | 🟡 En progreso |
 | 4 | Itinerario y paradas | 🔴 Pendiente |
 | 5 | Check-list de preparación | 🔴 Pendiente |
@@ -30,9 +30,14 @@ Permite publicar una nueva salida indicando título, tipo de rodada, punto de en
 
 ### 2. Buscar y filtrar salidas
 
-Permite explorar las salidas disponibles, buscarlas por texto y filtrarlas por tipo de viaje, fecha, distancia estimada o zona de partida.
+Permite explorar las salidas disponibles, buscarlas por texto y filtrarlas por tipo de viaje, fecha y distancia estimada.
 
-**Estado:** 🟡 En progreso. Implementado: listado ordenado por fecha y filtro por tipo de salida. Pendiente: búsqueda por texto y filtros por fecha, distancia y zona.
+**Estado:** 🟢 Completada.
+- Búsqueda por texto en el título, el destino y el punto de encuentro (zona de partida). No distingue mayúsculas ni acentos: "condor" encuentra "Cóndor".
+- Filtro por tipo de salida.
+- Filtro por fecha: próximos 7 días, 30 días o 3 meses.
+- Filtro por distancia: hasta 150 km, de 151 a 300 km o más de 300 km.
+- Los filtros se combinan entre sí, el listado se ordena por fecha y muestra la cantidad de resultados, con un botón para limpiar todos los filtros.
 
 ### 3. Gestión de asistencia
 
@@ -78,10 +83,10 @@ src/
     index.tsx         Listado de rodadas  ( / )
     crear.tsx         Formulario          ( /crear )
     rodada/[id].tsx   Detalle             ( /rodada/:id )
-  components/         Componentes reutilizables (RodadaCard, Chip, CampoTexto, Encabezado, InfoFila)
+  components/         Componentes reutilizables (RodadaCard, Chip, GrupoFiltro, BarraBusqueda, CampoTexto, Encabezado, InfoFila)
   store/              Estado global con Zustand
   styles/             Tema de colores
   data/               Datos de prueba
   types/              Tipos de TypeScript
-  utils/              Validación y formato de fechas y distancias
+  utils/              Validación y formato (formato.ts) y lógica de búsqueda y filtros (filtros.ts)
 ```
