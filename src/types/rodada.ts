@@ -15,6 +15,13 @@ export const TIPOS_SALIDA = [
 // Tipo derivado del arreglo anterior: solo acepta uno de esos 4 textos.
 export type TipoSalida = (typeof TIPOS_SALIDA)[number];
 
+// Una persona que confirmó que va a la rodada.
+export interface Asistente {
+  id: string;
+  nombre: string;
+  moto?: string; // opcional: marca y modelo de la moto
+}
+
 export interface Rodada {
   id: string;
   titulo: string;
@@ -24,6 +31,8 @@ export interface Rodada {
   fecha: string; // Formato 'AAAA-MM-DD' (ej: '2026-10-10'). Permite ordenar y filtrar.
   hora: string; // Formato 'HH:MM' en 24 hs (ej: '08:30').
   distanciaKm: number | null; // null = distancia todavía no definida.
-  asistentes: number;
+  organizadorId: string; // id del Asistente que creó la rodada
+  asistentes: Asistente[]; // lista de confirmados (incluye al organizador)
+  cupoMaximo: number | null; // null = sin límite de lugares
   descripcion: string;
 }

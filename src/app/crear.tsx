@@ -6,9 +6,11 @@ import { Alert, KeyboardAvoidingView, ScrollView, StyleSheet } from 'react-nativ
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 
+import Boton from '../components/Boton';
 import CampoTexto from '../components/CampoTexto';
 import Chip from '../components/Chip';
 import Encabezado from '../components/Encabezado';
+import { USUARIO_ACTUAL } from '../data/usuario';
 import { useRodadasStore } from '../store/rodadasStore';
 import { Rodada, TIPOS_SALIDA, TipoSalida } from '../types/rodada';
 import { hoyISO, parsearFecha, parsearHora } from '../utils/formato';
@@ -27,6 +29,7 @@ export default function CrearRodada() {
   const [fecha, setFecha] = useState('');
   const [hora, setHora] = useState('');
   const [distancia, setDistancia] = useState('');
+  const [cupo, setCupo] = useState('');
   const [descripcion, setDescripcion] = useState('');
 
   const handlePublicar = () => {
@@ -54,6 +57,14 @@ export default function CrearRodada() {
       }
     }
 
+    let cupoMaximo: number | null = null;
+    if (cupo.trim()) {
+      cupoMaximo = Number(cupo);
+      if (!Number.isInteger(cupoMaximo) || cupoMaximo < 2) {
+        errores.push('El cupo debe ser un número entero de 2 o más (vos + al menos otra persona).');
+      }
+    }
+
     if (errores.length > 0) {
       Alert.alert('Revisá los datos', errores.join('\n'));
       return;
@@ -68,7 +79,9 @@ export default function CrearRodada() {
       fecha: fechaISO!, // "!" = ya validamos que no es null
       hora: horaNormalizada!,
       distanciaKm,
-      asistentes: 1, // el organizador es el primer asistente
+      organizadorId: USUARIO_ACTUAL.id, // quien crea la rodada la organiza...
+      asistentes: [USUARIO_ACTUAL], // ...y es el primer asistente
+      cupoMaximo,
       descripcion: descripcion.trim(),
     };
 
@@ -140,13 +153,23 @@ export default function CrearRodada() {
             />
           </Fila>
 
-          <CampoTexto
-            etiqueta="Distancia (km)"
-            placeholder="Ej: 150 (opcional)"
-            keyboardType="numeric"
-            value={distancia}
-            onChangeText={setDistancia}
-          />
+          <Fila>
+            <CampoTexto
+              etiqueta="Distancia (km)"
+              placeholder="Opcional"
+              keyboardType="numeric"
+              value={distancia}
+              onChangeText={setDistancia}
+            />
+            <Separador />
+            <CampoTexto
+              etiqueta="Cupo máximo"
+              placeholder="Sin límite"
+              keyboardType="numeric"
+              value={cupo}
+              onChangeText={setCupo}
+            />
+          </Fila>
 
           <CampoTexto
             etiqueta="Recomendaciones / Detalles"
@@ -156,9 +179,9 @@ export default function CrearRodada() {
             onChangeText={setDescripcion}
           />
 
-          <BotonPublicar onPress={handlePublicar} activeOpacity={0.8}>
-            <TextoBoton>Publicar rodada</TextoBoton>
-          </BotonPublicar>
+          <ContenedorBoton>
+            <Boton texto="Publicar rodada" icono="send-outline" onPress={handlePublicar} />
+          </ContenedorBoton>
         </ScrollView>
       </KeyboardAvoidingView>
     </Pantalla>
@@ -197,16 +220,6 @@ const Separador = styled.View`
   width: 16px;
 `;
 
-const BotonPublicar = styled.TouchableOpacity`
-  align-items: center;
+const ContenedorBoton = styled.View`
   margin: 10px 0 30px 0;
-  padding: 16px;
-  border-radius: 12px;
-  background-color: ${({ theme }) => theme.colores.primario};
-`;
-
-const TextoBoton = styled.Text`
-  font-size: 16px;
-  font-weight: bold;
-  color: ${({ theme }) => theme.colores.blanco};
 `;

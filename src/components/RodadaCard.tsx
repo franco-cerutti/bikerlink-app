@@ -4,7 +4,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import styled, { useTheme } from 'styled-components/native';
 
+import { USUARIO_ACTUAL } from '../data/usuario';
 import { Rodada } from '../types/rodada';
+import { cupoCompleto, estaConfirmado, resumenAsistencia } from '../utils/asistencia';
 import { formatearDistancia, formatearFechaHora } from '../utils/formato';
 import InfoFila from './InfoFila';
 
@@ -15,6 +17,7 @@ interface RodadaCardProps {
 
 export default function RodadaCard({ rodada, onPress }: RodadaCardProps) {
   const theme = useTheme();
+  const confirmado = estaConfirmado(rodada, USUARIO_ACTUAL.id);
 
   return (
     <Tarjeta onPress={onPress} activeOpacity={0.8}>
@@ -29,7 +32,22 @@ export default function RodadaCard({ rodada, onPress }: RodadaCardProps) {
       <InfoFila icono="speedometer-outline" texto={formatearDistancia(rodada.distanciaKm)} />
 
       <Pie>
-        <InfoFila icono="people-outline" texto={`${rodada.asistentes} moteros confirmados`} />
+        <AsistenciaPie>
+          <InfoFila icono="people-outline" texto={resumenAsistencia(rodada)} />
+        </AsistenciaPie>
+        {/* Marca rápida para saber, desde el listado, a qué rodadas ya me anoté */}
+        {confirmado ? (
+          <Marca $tipo="voy">
+            <Ionicons name="checkmark-circle" size={14} color={theme.colores.blanco} />
+            <TextoMarca>Vas</TextoMarca>
+          </Marca>
+        ) : (
+          cupoCompleto(rodada) && (
+            <Marca $tipo="lleno">
+              <TextoMarca>Completa</TextoMarca>
+            </Marca>
+          )
+        )}
         <Ionicons name="chevron-forward" size={20} color={theme.colores.textoTenue} />
       </Pie>
     </Tarjeta>
@@ -80,4 +98,25 @@ const Pie = styled.View`
   padding-top: 10px;
   border-top-width: 1px;
   border-top-color: ${({ theme }) => theme.colores.campo};
+`;
+
+const AsistenciaPie = styled.View`
+  flex: 1;
+`;
+
+const Marca = styled.View<{ $tipo: 'voy' | 'lleno' }>`
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+  margin-right: 6px;
+  padding: 3px 8px;
+  border-radius: 10px;
+  background-color: ${({ theme, $tipo }) =>
+    $tipo === 'voy' ? theme.colores.primario : theme.colores.textoTenue};
+`;
+
+const TextoMarca = styled.Text`
+  font-size: 12px;
+  font-weight: bold;
+  color: ${({ theme }) => theme.colores.blanco};
 `;

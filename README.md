@@ -18,7 +18,7 @@ Cuando se organizan salidas en moto entre varias personas, gran parte de la info
 |---|---------|--------|
 | 1 | Crear y clasificar una rodada | 🟢 Completada |
 | 2 | Buscar y filtrar salidas | 🟢 Completada |
-| 3 | Gestión de asistencia | 🟡 En progreso |
+| 3 | Gestión de asistencia | 🟢 Completada |
 | 4 | Itinerario y paradas | 🔴 Pendiente |
 | 5 | Check-list de preparación | 🔴 Pendiente |
 
@@ -43,7 +43,13 @@ Permite explorar las salidas disponibles, buscarlas por texto y filtrarlas por t
 
 Permite consultar el detalle de una salida y confirmar o cancelar la participación. El organizador y los participantes pueden ver la lista actualizada de asistentes.
 
-**Estado:** 🟡 En progreso. Implementado: pantalla de detalle de cada rodada (ruta dinámica `/rodada/[id]`) con la cantidad de confirmados. Pendiente: confirmar/cancelar asistencia y lista de asistentes.
+**Estado:** 🟢 Completada.
+- Pantalla de detalle de cada rodada (ruta dinámica `/rodada/[id]`) con la lista de asistentes: nombre, moto y quién organiza.
+- Botón para confirmar asistencia y para cancelarla (con pedido de confirmación).
+- Cupo máximo opcional al crear la rodada: muestra los lugares libres y bloquea la confirmación cuando se completa.
+- El organizador no puede darse de baja de su propia rodada.
+- El listado marca las rodadas a las que el usuario ya se anotó ("Vas") y las que están completas.
+- Todavía no hay inicio de sesión: el usuario de la app es fijo ("Vos") hasta que se agregue login.
 
 ### 4. Itinerario y paradas
 
@@ -83,10 +89,10 @@ src/
     index.tsx         Listado de rodadas  ( / )
     crear.tsx         Formulario          ( /crear )
     rodada/[id].tsx   Detalle             ( /rodada/:id )
-  components/         Componentes reutilizables (RodadaCard, Chip, GrupoFiltro, BarraBusqueda, CampoTexto, Encabezado, InfoFila)
+  components/         Componentes reutilizables (RodadaCard, Boton, Chip, GrupoFiltro, BarraBusqueda, CampoTexto, Encabezado, InfoFila, FilaAsistente)
   store/              Estado global con Zustand
   styles/             Tema de colores
-  data/               Datos de prueba
+  data/               Datos de prueba y usuario actual
   types/              Tipos de TypeScript
-  utils/              Validación y formato (formato.ts) y lógica de búsqueda y filtros (filtros.ts)
+  utils/              Validación y formato (formato.ts), búsqueda y filtros (filtros.ts) y reglas de asistencia (asistencia.ts)
 ```
