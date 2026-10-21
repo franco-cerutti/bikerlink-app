@@ -42,3 +42,23 @@ export function iniciales(nombre: string): string {
     .map((parte) => parte[0].toUpperCase())
     .join('');
 }
+
+// ---------- Mis rodadas ----------
+
+export type VistaMisRodadas = 'voy' | 'organizo';
+
+/**
+ * Rodadas del usuario según la vista elegida:
+ *  - 'voy': todas en las que está confirmado (incluye las que organiza, porque el
+ *    organizador también es asistente).
+ *  - 'organizo': solo las que creó.
+ */
+export function filtrarMisRodadas(
+  rodadas: Rodada[],
+  usuarioId: string,
+  vista: VistaMisRodadas,
+): Rodada[] {
+  return rodadas.filter((rodada) =>
+    vista === 'organizo' ? esOrganizador(rodada, usuarioId) : estaConfirmado(rodada, usuarioId),
+  );
+}

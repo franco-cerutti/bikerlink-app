@@ -1,4 +1,4 @@
-// src/app/index.tsx  →  ruta "/"
+// src/app/(tabs)/index.tsx  →  ruta "/" (pestaña Explorar)
 // Pantalla principal: listado de rodadas con búsqueda y filtros (Feature 2).
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -7,12 +7,12 @@ import { FlatList, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styled, { useTheme } from 'styled-components/native';
 
-import BarraBusqueda from '../components/BarraBusqueda';
-import Encabezado from '../components/Encabezado';
-import GrupoFiltro from '../components/GrupoFiltro';
-import RodadaCard from '../components/RodadaCard';
-import { useRodadasStore } from '../store/rodadasStore';
-import { TIPOS_SALIDA } from '../types/rodada';
+import BarraBusqueda from '../../components/BarraBusqueda';
+import Encabezado from '../../components/Encabezado';
+import GrupoFiltro from '../../components/GrupoFiltro';
+import RodadaCard from '../../components/RodadaCard';
+import { useRodadasStore } from '../../store/rodadasStore';
+import { TIPOS_SALIDA } from '../../types/rodada';
 import {
   contarFiltrosAvanzados,
   CRITERIOS_INICIALES,
@@ -23,7 +23,7 @@ import {
   FiltroDistancia,
   FiltroFecha,
   hayCriteriosActivos,
-} from '../utils/filtros';
+} from '../../utils/filtros';
 
 // Los tipos de salida con el mismo formato { id, etiqueta } que usan los otros filtros.
 const OPCIONES_TIPO = ['Todas', ...TIPOS_SALIDA].map((tipo) => ({ id: tipo, etiqueta: tipo }));
@@ -154,7 +154,7 @@ export default function ListadoRodadas() {
 }
 
 const styles = StyleSheet.create({
-  lista: { padding: 16, paddingBottom: 110 },
+  lista: { padding: 16, paddingBottom: 90 },
 });
 
 const Pantalla = styled(SafeAreaView)`
@@ -243,7 +243,7 @@ const TextoVacio = styled.Text`
 const BotonFlotante = styled.TouchableOpacity`
   position: absolute;
   right: 20px;
-  bottom: 40px;
+  bottom: 20px;
   width: 58px;
   height: 58px;
   border-radius: 29px;

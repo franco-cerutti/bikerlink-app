@@ -65,6 +65,12 @@ export function hayCriteriosActivos(criterios: CriteriosBusqueda): boolean {
   );
 }
 
+/** Devuelve una COPIA ordenada por fecha y hora (la más próxima primero). */
+export function ordenarPorFecha(rodadas: Rodada[]): Rodada[] {
+  // [...rodadas] porque sort() modifica el array sobre el que se llama.
+  return [...rodadas].sort((a, b) => `${a.fecha} ${a.hora}`.localeCompare(`${b.fecha} ${b.hora}`));
+}
+
 /**
  * Aplica todos los criterios a la vez (una rodada tiene que cumplir TODOS para aparecer)
  * y devuelve el resultado ordenado por fecha y hora.
@@ -76,33 +82,33 @@ export function filtrarRodadas(rodadas: Rodada[], criterios: CriteriosBusqueda):
   const opcionFecha = FILTROS_FECHA.find((f) => f.id === criterios.fecha)!;
   const opcionDistancia = FILTROS_DISTANCIA.find((d) => d.id === criterios.distancia)!;
 
-  return rodadas
-    .filter((rodada) => {
-      // 1) Búsqueda por texto: título, destino o punto de encuentro (zona de partida).
-      if (texto) {
-        const dondeBuscar = normalizarTexto(
-          `${rodada.titulo} ${rodada.destino} ${rodada.puntoEncuentro}`,
-        );
-        if (!dondeBuscar.includes(texto)) return false;
-      }
+  const filtradas = rodadas.filter((rodada) => {
+    // 1) Búsqueda por texto: título, destino o punto de encuentro (zona de partida).
+    if (texto) {
+      const dondeBuscar = normalizarTexto(
+        `${rodada.titulo} ${rodada.destino} ${rodada.puntoEncuentro}`,
+      );
+      if (!dondeBuscar.includes(texto)) return false;
+    }
 
-      // 2) Tipo de salida
-      if (criterios.tipo !== 'Todas' && rodada.tipo !== criterios.tipo) return false;
+    // 2) Tipo de salida
+    if (criterios.tipo !== 'Todas' && rodada.tipo !== criterios.tipo) return false;
 
-      // 3) Fecha: entre hoy y hoy + N días. Las fechas 'AAAA-MM-DD' se comparan como texto.
-      if (opcionFecha.dias !== null) {
-        const limite = sumarDias(hoy, opcionFecha.dias);
-        if (rodada.fecha < hoy || rodada.fecha > limite) return false;
-      }
+    // 3) Fecha: entre hoy y hoy + N días. Las fechas 'AAAA-MM-DD' se comparan como texto.
+    if (opcionFecha.dias !== null) {
+      const limite = sumarDias(hoy, opcionFecha.dias);
+      if (rodada.fecha < hoy || rodada.fecha > limite) return false;
+    }
 
-      // 4) Distancia: si la rodada no tiene distancia cargada, no entra en ningún rango.
-      if (opcionDistancia.min !== null) {
-        if (rodada.distanciaKm === null) return false;
-        if (rodada.distanciaKm < opcionDistancia.min) return false;
-        if (opcionDistancia.max !== null && rodada.distanciaKm > opcionDistancia.max) return false;
-      }
+    // 4) Distancia: si la rodada no tiene distancia cargada, no entra en ningún rango.
+    if (opcionDistancia.min !== null) {
+      if (rodada.distanciaKm === null) return false;
+      if (rodada.distanciaKm < opcionDistancia.min) return false;
+      if (opcionDistancia.max !== null && rodada.distanciaKm > opcionDistancia.max) return false;
+    }
 
-      return true;
-    })
-    .sort((a, b) => `${a.fecha} ${a.hora}`.localeCompare(`${b.fecha} ${b.hora}`));
+    return true;
+  });
+
+  return ordenarPorFecha(filtradas);
 }

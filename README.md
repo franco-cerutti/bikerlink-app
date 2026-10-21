@@ -19,8 +19,9 @@ Cuando se organizan salidas en moto entre varias personas, gran parte de la info
 | 1 | Crear y clasificar una rodada | 🟢 Completada |
 | 2 | Buscar y filtrar salidas | 🟢 Completada |
 | 3 | Gestión de asistencia | 🟢 Completada |
-| 4 | Itinerario y paradas | 🔴 Pendiente |
-| 5 | Check-list de preparación | 🔴 Pendiente |
+| 4 | Clima y fotos del destino | 🔴 Pendiente |
+| 5 | Consultar mis rodadas | 🟢 Completada |
+| 6 | Check-list de preparación | 🔴 Pendiente |
 
 ### 1. Crear y clasificar una rodada
 
@@ -51,13 +52,25 @@ Permite consultar el detalle de una salida y confirmar o cancelar la participaci
 - El listado marca las rodadas a las que el usuario ya se anotó ("Vas") y las que están completas.
 - Todavía no hay inicio de sesión: el usuario de la app es fijo ("Vos") hasta que se agregue login.
 
-### 4. Itinerario y paradas
+### 4. Clima y fotos del destino
 
-Permite definir y consultar las paradas del recorrido (estaciones de servicio, restaurantes, peajes o puntos turísticos) con una estimación de la distancia entre tramos.
+Permite consultar, desde el detalle de la rodada, el pronóstico del clima del destino para el día de la salida (temperatura, probabilidad de lluvia y viento) y una galería de fotos del lugar.
 
-**Estado:** 🔴 Pendiente.
+**Estado:** 🔴 Pendiente. Se implementará consumiendo APIs públicas (Open-Meteo y Wikimedia Commons) con fetch y TanStack Query.
 
-### 5. Check-list de preparación
+> Esta Feature reemplaza a "Itinerario y paradas", que requiere mapas y ubicación (contenidos que todavía no se vieron en la materia).
+
+### 5. Consultar mis rodadas
+
+Permite ver en una pestaña propia las rodadas a las que el usuario confirmó asistencia y las que organiza.
+
+**Estado:** 🟢 Completada.
+- Navegación por pestañas (Tabs) con "Explorar" y "Mis rodadas".
+- Vistas "Voy" y "Organizo", ordenadas por fecha.
+- La pestaña muestra un contador con la cantidad de rodadas a las que el usuario va, que se actualiza al confirmar o cancelar.
+- El detalle y el formulario se abren por encima de las pestañas (Stack + Tabs anidados).
+
+### 6. Check-list de preparación
 
 Lista de verificación para preparar la moto y el equipamiento antes de la salida. Los ítems sugeridos varían según el tipo de viaje.
 
@@ -66,7 +79,7 @@ Lista de verificación para preparar la moto y el equipamiento antes de la salid
 ## Tecnologías
 
 - React Native con Expo (SDK 57) y TypeScript
-- Expo Router: navegación Stack y ruta dinámica con parámetros
+- Expo Router: navegación Stack, Tabs anidadas y ruta dinámica con parámetros
 - Styled Components con ThemeProvider para los estilos
 - Zustand para el estado global de las rodadas
 - @expo/vector-icons para los íconos
@@ -85,10 +98,13 @@ Con el emulador de Android Studio abierto, presionar `a` en la terminal para abr
 ```
 src/
   app/                Rutas de Expo Router
-    _layout.tsx       Stack + ThemeProvider
-    index.tsx         Listado de rodadas  ( / )
-    crear.tsx         Formulario          ( /crear )
-    rodada/[id].tsx   Detalle             ( /rodada/:id )
+    _layout.tsx       Stack raíz + ThemeProvider
+    (tabs)/           Grupo de pestañas
+      _layout.tsx     Barra de pestañas (Tabs)
+      index.tsx       Explorar: listado, búsqueda y filtros  ( / )
+      mis-rodadas.tsx Mis rodadas                            ( /mis-rodadas )
+    crear.tsx         Formulario                             ( /crear )
+    rodada/[id].tsx   Detalle y asistencia                   ( /rodada/:id )
   components/         Componentes reutilizables (RodadaCard, Boton, Chip, GrupoFiltro, BarraBusqueda, CampoTexto, Encabezado, InfoFila, FilaAsistente)
   store/              Estado global con Zustand
   styles/             Tema de colores
