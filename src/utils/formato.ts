@@ -56,13 +56,26 @@ export function sumarDias(fechaISO: string, dias: number): string {
   return `${fecha.getFullYear()}-${mm}-${dd}`;
 }
 
-/** '2026-10-10' + '08:30' -> 'Sáb 10/10/2026 · 08:30 hs' */
-export function formatearFechaHora(fechaISO: string, hora: string): string {
+/** Días que hay entre dos fechas 'AAAA-MM-DD'. Ej: ('2026-10-01', '2026-10-05') -> 4 */
+export function diasEntre(desdeISO: string, hastaISO: string): number {
+  const [a1, m1, d1] = desdeISO.split('-').map(Number);
+  const [a2, m2, d2] = hastaISO.split('-').map(Number);
+  // Date.UTC evita errores por cambios de horario. 86400000 = milisegundos de un día.
+  return Math.round((Date.UTC(a2, m2 - 1, d2) - Date.UTC(a1, m1 - 1, d1)) / 86400000);
+}
+
+/** '2026-10-10' -> 'Sáb 10/10/2026' */
+export function formatearFecha(fechaISO: string): string {
   const [anio, mes, dia] = fechaISO.split('-').map(Number);
   const diaSemana = DIAS[new Date(anio, mes - 1, dia).getDay()];
   const dd = String(dia).padStart(2, '0');
   const mm = String(mes).padStart(2, '0');
-  return `${diaSemana} ${dd}/${mm}/${anio} · ${hora} hs`;
+  return `${diaSemana} ${dd}/${mm}/${anio}`;
+}
+
+/** '2026-10-10' + '08:30' -> 'Sáb 10/10/2026 · 08:30 hs' */
+export function formatearFechaHora(fechaISO: string, hora: string): string {
+  return `${formatearFecha(fechaISO)} · ${hora} hs`;
 }
 
 /** 140 -> '140 km' | null -> 'A definir' */

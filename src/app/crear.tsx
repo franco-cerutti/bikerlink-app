@@ -128,7 +128,7 @@ export default function CrearRodada() {
 
           <CampoTexto
             etiqueta="Destino *"
-            placeholder="Ej: El Cóndor"
+            placeholder="Localidad, ej: Mina Clavero"
             value={destino}
             onChangeText={setDestino}
           />

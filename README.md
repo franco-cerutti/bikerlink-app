@@ -19,7 +19,7 @@ Cuando se organizan salidas en moto entre varias personas, gran parte de la info
 | 1 | Crear y clasificar una rodada | 🟢 Completada |
 | 2 | Buscar y filtrar salidas | 🟢 Completada |
 | 3 | Gestión de asistencia | 🟢 Completada |
-| 4 | Clima y fotos del destino | 🔴 Pendiente |
+| 4 | Clima y fotos del destino | 🟢 Completada |
 | 5 | Consultar mis rodadas | 🟢 Completada |
 | 6 | Check-list de preparación | 🔴 Pendiente |
 
@@ -34,7 +34,7 @@ Permite publicar una nueva salida indicando título, tipo de rodada, punto de en
 Permite explorar las salidas disponibles, buscarlas por texto y filtrarlas por tipo de viaje, fecha y distancia estimada.
 
 **Estado:** 🟢 Completada.
-- Búsqueda por texto en el título, el destino y el punto de encuentro (zona de partida). No distingue mayúsculas ni acentos: "condor" encuentra "Cóndor".
+- Búsqueda por texto en el título, el destino y el punto de encuentro (zona de partida). No distingue mayúsculas ni acentos: "cordoba" encuentra "Córdoba".
 - Filtro por tipo de salida.
 - Filtro por fecha: próximos 7 días, 30 días o 3 meses.
 - Filtro por distancia: hasta 150 km, de 151 a 300 km o más de 300 km.
@@ -54,9 +54,13 @@ Permite consultar el detalle de una salida y confirmar o cancelar la participaci
 
 ### 4. Clima y fotos del destino
 
-Permite consultar, desde el detalle de la rodada, el pronóstico del clima del destino para el día de la salida (temperatura, probabilidad de lluvia y viento) y una galería de fotos del lugar.
+Permite consultar, desde el detalle de la rodada, el pronóstico del clima del destino para el día de la salida y una galería de fotos del lugar.
 
-**Estado:** 🔴 Pendiente. Se implementará consumiendo APIs públicas (Open-Meteo y Wikimedia Commons) con fetch y TanStack Query.
+**Estado:** 🟢 Completada.
+- **Clima:** pronóstico para la fecha de la rodada (estado del cielo, máxima y mínima, probabilidad de lluvia y viento) con recomendaciones para rodar (equipo de lluvia, viento fuerte, frío, calor o tormenta). El pronóstico está disponible hasta 16 días antes de la salida; si falta más, la app indica desde qué fecha se va a poder ver. Fuente: [Open-Meteo](https://open-meteo.com).
+- **Fotos:** foto de portada en el detalle, vista previa de las primeras fotos y galería completa en grilla con **scroll infinito** (se cargan de a 12 a medida que se baja). Al tocar una foto se abre su página con autor y licencia. Fuente: [Wikimedia Commons](https://commons.wikimedia.org).
+- Las consultas usan **fetch** y **TanStack Query**: caché (las coordenadas del destino se piden una sola vez y las comparten el clima y las fotos), estados de carga y error con botón para reintentar, consulta dependiente (el pronóstico espera a tener las coordenadas) y `useInfiniteQuery` para la paginación.
+- Para que el clima funcione, el destino tiene que ser una localidad (ej: "Mina Clavero" o "Diamante, Entre Ríos").
 
 > Esta Feature reemplaza a "Itinerario y paradas", que requiere mapas y ubicación (contenidos que todavía no se vieron en la materia).
 
@@ -82,6 +86,8 @@ Lista de verificación para preparar la moto y el equipamiento antes de la salid
 - Expo Router: navegación Stack, Tabs anidadas y ruta dinámica con parámetros
 - Styled Components con ThemeProvider para los estilos
 - Zustand para el estado global de las rodadas
+- Fetch + TanStack Query (`useQuery`, `useInfiniteQuery`) para consumir APIs públicas: Open-Meteo (clima) y Wikimedia Commons (fotos)
+- `Image` con imágenes remotas (descargadas con fetch y guardadas en la caché de TanStack Query), `FlatList` en grilla (`numColumns`) y scroll infinito (`onEndReached`)
 - @expo/vector-icons para los íconos
 
 ## Cómo ejecutar
@@ -98,17 +104,21 @@ Con el emulador de Android Studio abierto, presionar `a` en la terminal para abr
 ```
 src/
   app/                Rutas de Expo Router
-    _layout.tsx       Stack raíz + ThemeProvider
+    _layout.tsx       Stack raíz + ThemeProvider + QueryClientProvider
     (tabs)/           Grupo de pestañas
       _layout.tsx     Barra de pestañas (Tabs)
       index.tsx       Explorar: listado, búsqueda y filtros  ( / )
       mis-rodadas.tsx Mis rodadas                            ( /mis-rodadas )
     crear.tsx         Formulario                             ( /crear )
-    rodada/[id].tsx   Detalle y asistencia                   ( /rodada/:id )
-  components/         Componentes reutilizables (RodadaCard, Boton, Chip, GrupoFiltro, BarraBusqueda, CampoTexto, Encabezado, InfoFila, FilaAsistente)
+    rodada/[id]/
+      index.tsx       Detalle, clima, fotos y asistencia     ( /rodada/:id )
+      fotos.tsx       Galería con scroll infinito            ( /rodada/:id/fotos )
+  api/                Peticiones HTTP con fetch (http.ts, clima.ts, fotos.ts, imagenes.ts)
+  hooks/              Consultas de TanStack Query (useUbicacion, usePronostico, useFotosDestino)
+  components/         Componentes reutilizables (RodadaCard, Boton, Chip, GrupoFiltro, BarraBusqueda, CampoTexto, Encabezado, InfoFila, FilaAsistente, TarjetaClima, FotoRemota, PortadaDestino, VistaPreviaFotos)
   store/              Estado global con Zustand
   styles/             Tema de colores
   data/               Datos de prueba y usuario actual
   types/              Tipos de TypeScript
-  utils/              Validación y formato (formato.ts), búsqueda y filtros (filtros.ts) y reglas de asistencia (asistencia.ts)
+  utils/              Validación y formato (formato.ts), búsqueda y filtros (filtros.ts), reglas de asistencia (asistencia.ts) e interpretación del clima (clima.ts)
 ```

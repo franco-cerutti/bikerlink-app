@@ -1,5 +1,5 @@
-// src/app/rodada/[id].tsx  →  ruta dinámica "/rodada/<id>"
-// Detalle de una rodada + gestión de asistencia (Feature 3).
+// src/app/rodada/[id]/index.tsx  →  ruta dinámica "/rodada/<id>"
+// Detalle de una rodada: datos, clima y fotos del destino (Feature 4) y asistencia (Feature 3).
 // Los corchetes en el nombre del archivo indican que "id" es un parámetro:
 // /rodada/1, /rodada/2, etc. abren esta misma pantalla con distinto id.
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -7,20 +7,23 @@ import { Alert, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styled from 'styled-components/native';
 
-import Boton from '../../components/Boton';
-import Encabezado from '../../components/Encabezado';
-import FilaAsistente from '../../components/FilaAsistente';
-import InfoFila from '../../components/InfoFila';
-import { USUARIO_ACTUAL } from '../../data/usuario';
-import { useRodadasStore } from '../../store/rodadasStore';
+import Boton from '../../../components/Boton';
+import Encabezado from '../../../components/Encabezado';
+import FilaAsistente from '../../../components/FilaAsistente';
+import InfoFila from '../../../components/InfoFila';
+import PortadaDestino from '../../../components/PortadaDestino';
+import TarjetaClima from '../../../components/TarjetaClima';
+import VistaPreviaFotos from '../../../components/VistaPreviaFotos';
+import { USUARIO_ACTUAL } from '../../../data/usuario';
+import { useRodadasStore } from '../../../store/rodadasStore';
 import {
   cupoCompleto,
   esOrganizador,
   estaConfirmado,
   lugaresDisponibles,
   resumenAsistencia,
-} from '../../utils/asistencia';
-import { formatearDistancia, formatearFechaHora } from '../../utils/formato';
+} from '../../../utils/asistencia';
+import { formatearDistancia, formatearFechaHora } from '../../../utils/formato';
 
 export default function DetalleRodada() {
   const router = useRouter();
@@ -90,6 +93,7 @@ export default function DetalleRodada() {
       <Encabezado titulo="Detalle" onVolver={() => router.back()} />
 
       <ScrollView contentContainerStyle={styles.contenido}>
+        <PortadaDestino destino={rodada.destino} />
         <Etiqueta>{rodada.tipo}</Etiqueta>
         <Titulo>{rodada.titulo}</Titulo>
 
@@ -106,6 +110,19 @@ export default function DetalleRodada() {
         <Bloque>
           <TituloBloque>Cuándo</TituloBloque>
           <InfoFila icono="calendar-outline" texto={formatearFechaHora(rodada.fecha, rodada.hora)} />
+        </Bloque>
+
+        <Bloque>
+          <TituloBloque>Clima en el destino</TituloBloque>
+          <TarjetaClima rodada={rodada} />
+        </Bloque>
+
+        <Bloque>
+          <TituloBloque>Fotos del destino</TituloBloque>
+          <VistaPreviaFotos
+            destino={rodada.destino}
+            onVerTodas={() => router.push({ pathname: '/rodada/[id]/fotos', params: { id: rodada.id } })}
+          />
         </Bloque>
 
         {rodada.descripcion ? (

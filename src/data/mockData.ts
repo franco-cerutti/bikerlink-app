@@ -1,5 +1,6 @@
 // src/data/mockData.ts
 // Datos de prueba para arrancar la app con contenido.
+// Los destinos son localidades reales para que las APIs de clima y fotos las encuentren.
 // Las fechas se calculan a partir de HOY, así los datos de ejemplo nunca quedan
 // en el pasado y los filtros por fecha siempre tienen algo para mostrar.
 import { Asistente, Rodada } from '../types/rodada';
@@ -32,17 +33,17 @@ function moteros(...numeros: number[]): Asistente[] {
 export const RODADAS_INICIALES: Rodada[] = [
   {
     id: '1',
-    titulo: 'Café y Curvas en Altas Cumbres',
+    titulo: 'Café y Curvas por las Altas Cumbres',
     tipo: 'Vuelta corta',
     puntoEncuentro: 'YPF Carlos Paz',
-    destino: 'Parador El Cóndor',
+    destino: 'Mina Clavero',
     fecha: sumarDias(hoy, 4),
     hora: '08:30',
     distanciaKm: 140,
     organizadorId: 'm1',
     asistentes: moteros(1, 4, 7, 9, 12),
     cupoMaximo: null,
-    descripcion: 'Salida tranquila por la mañana para tomar café y volver a almorzar a casa.',
+    descripcion: 'Salida tranquila: café en Mina Clavero y vuelta a almorzar a casa.',
   },
   {
     id: '2',
@@ -77,7 +78,7 @@ export const RODADAS_INICIALES: Rodada[] = [
     titulo: 'Finde en Los Reartes con Carpa',
     tipo: 'Fin de semana',
     puntoEncuentro: 'Peaje Ruta 5',
-    destino: 'Camping Los Reartes',
+    destino: 'Los Reartes',
     fecha: sumarDias(hoy, 25),
     hora: '07:00',
     distanciaKm: 180,
@@ -92,7 +93,7 @@ export const RODADAS_INICIALES: Rodada[] = [
     titulo: 'Atardecer en el Dique Los Molinos',
     tipo: 'Vuelta corta',
     puntoEncuentro: 'Shell Av. Vélez Sarsfield, Córdoba',
-    destino: 'Dique Los Molinos',
+    destino: 'Los Molinos, Córdoba',
     fecha: sumarDias(hoy, 9),
     hora: '17:00',
     distanciaKm: 95,
@@ -103,16 +104,16 @@ export const RODADAS_INICIALES: Rodada[] = [
   },
   {
     id: '6',
-    titulo: 'Cruce a las Altas Cumbres por Mina Clavero',
+    titulo: 'Cruce de las Altas Cumbres hasta Nono',
     tipo: 'Fin de semana',
     puntoEncuentro: 'YPF Carlos Paz',
-    destino: 'Mina Clavero',
+    destino: 'Nono',
     fecha: sumarDias(hoy, 70),
     hora: '08:00',
     distanciaKm: null,
     organizadorId: 'm5',
     asistentes: moteros(5, 10, 3),
     cupoMaximo: null,
-    descripcion: 'Recorrido a confirmar. Dormimos una noche en Mina Clavero.',
+    descripcion: 'Recorrido a confirmar. Dormimos una noche en Nono.',
   },
 ];
