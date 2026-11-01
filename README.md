@@ -21,13 +21,13 @@ Cuando se organizan salidas en moto entre varias personas, gran parte de la info
 | 3 | Gestión de asistencia | 🟢 Completada |
 | 4 | Clima y fotos del destino | 🟢 Completada |
 | 5 | Consultar mis rodadas | 🟢 Completada |
-| 6 | Check-list de preparación | 🔴 Pendiente |
+| 6 | Check-list de preparación | 🟢 Completada |
 
 ### 1. Crear y clasificar una rodada
 
 Permite publicar una nueva salida indicando título, tipo de rodada, punto de encuentro, destino, fecha, hora, distancia estimada y recomendaciones. Los tipos disponibles son: Vuelta corta, Fin de semana, Motoencuentro y Trail / Off-Road.
 
-**Estado:** 🟢 Completada. El formulario valida los campos obligatorios, que la fecha exista y no sea pasada, el formato de la hora y que la distancia sea un número. Las rodadas se guardan en un estado global (Zustand) y por ahora se pierden al cerrar la app; la persistencia se agregará con AsyncStorage/SQLite.
+**Estado:** 🟢 Completada. El formulario valida los campos obligatorios, que la fecha exista y no sea pasada, el formato de la hora y que la distancia sea un número. Las rodadas se guardan en un estado global (Zustand) y quedan guardadas en el celular con AsyncStorage: no se pierden al cerrar la app.
 
 ### 2. Buscar y filtrar salidas
 
@@ -78,16 +78,28 @@ Permite ver en una pestaña propia las rodadas a las que el usuario confirmó as
 
 Lista de verificación para preparar la moto y el equipamiento antes de la salida. Los ítems sugeridos varían según el tipo de viaje.
 
-**Estado:** 🔴 Pendiente.
+**Estado:** 🟢 Completada.
+- Ítems base para cualquier salida (moto, equipo y documentación) más ítems específicos según el tipo: carpa y entrada para un motoencuentro, kit de parches y botas para trail, ropa y reserva para un fin de semana, etc.
+- Lista agrupada por categoría con `SectionList` y contador por sección.
+- Barra de progreso animada (API `Animated`) que se pone verde al completar todo.
+- Botón para reiniciar el check-list.
+- Los tildes se guardan en el celular con **AsyncStorage**: se mantienen aunque se cierre la app.
+- Se accede desde el detalle de la rodada, en el bloque "Preparación", cuando el usuario confirmó asistencia u organiza la salida.
+
+## Datos guardados en el celular
+
+Las rodadas, las asistencias y los check-lists se guardan con **AsyncStorage** usando el middleware `persist` de Zustand. Al abrir la app se muestra un indicador de carga hasta que se leen los datos guardados. Para volver a los datos de ejemplo, en la pestaña "Mis rodadas" está el botón **Restablecer datos de ejemplo**.
 
 ## Tecnologías
 
 - React Native con Expo (SDK 57) y TypeScript
 - Expo Router: navegación Stack, Tabs anidadas y ruta dinámica con parámetros
 - Styled Components con ThemeProvider para los estilos
-- Zustand para el estado global de las rodadas
+- Zustand para el estado global, con `persist` + AsyncStorage para guardar los datos en el celular
 - Fetch + TanStack Query (`useQuery`, `useInfiniteQuery`) para consumir APIs públicas: Open-Meteo (clima) y Wikimedia Commons (fotos)
 - `Image` con imágenes remotas (descargadas con fetch y guardadas en la caché de TanStack Query), `FlatList` en grilla (`numColumns`) y scroll infinito (`onEndReached`)
+- `SectionList` para el check-list agrupado por categoría
+- API `Animated` para la barra de progreso
 - @expo/vector-icons para los íconos
 
 ## Cómo ejecutar
@@ -113,12 +125,13 @@ src/
     rodada/[id]/
       index.tsx       Detalle, clima, fotos y asistencia     ( /rodada/:id )
       fotos.tsx       Galería con scroll infinito            ( /rodada/:id/fotos )
+      checklist.tsx   Check-list de preparación              ( /rodada/:id/checklist )
   api/                Peticiones HTTP con fetch (http.ts, clima.ts, fotos.ts, imagenes.ts)
-  hooks/              Consultas de TanStack Query (useUbicacion, usePronostico, useFotosDestino)
-  components/         Componentes reutilizables (RodadaCard, Boton, Chip, GrupoFiltro, BarraBusqueda, CampoTexto, Encabezado, InfoFila, FilaAsistente, TarjetaClima, FotoRemota, PortadaDestino, VistaPreviaFotos)
-  store/              Estado global con Zustand
+  hooks/              Consultas de TanStack Query (useUbicacion, usePronostico, useFotosDestino), useChecklist y useDatosCargados
+  components/         Componentes reutilizables (RodadaCard, Boton, Chip, GrupoFiltro, BarraBusqueda, CampoTexto, Encabezado, InfoFila, FilaAsistente, TarjetaClima, FotoRemota, PortadaDestino, VistaPreviaFotos, BarraProgreso, FilaChecklist, ResumenChecklist)
+  store/              Estado global con Zustand y persistencia en AsyncStorage (rodadasStore, checklistStore)
   styles/             Tema de colores
-  data/               Datos de prueba y usuario actual
+  data/               Datos de prueba, usuario actual e ítems del check-list
   types/              Tipos de TypeScript
-  utils/              Validación y formato (formato.ts), búsqueda y filtros (filtros.ts), reglas de asistencia (asistencia.ts) e interpretación del clima (clima.ts)
+  utils/              Validación y formato (formato.ts), búsqueda y filtros (filtros.ts), reglas de asistencia (asistencia.ts) interpretación del clima (clima.ts) y progreso del check-list (checklist.ts)
 ```

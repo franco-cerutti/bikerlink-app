@@ -3,7 +3,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { FlatList, StyleSheet } from 'react-native';
+import { Alert, FlatList, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import styled, { useTheme } from 'styled-components/native';
 
@@ -12,6 +12,7 @@ import Chip from '../../components/Chip';
 import Encabezado from '../../components/Encabezado';
 import RodadaCard from '../../components/RodadaCard';
 import { USUARIO_ACTUAL } from '../../data/usuario';
+import { useChecklistStore } from '../../store/checklistStore';
 import { useRodadasStore } from '../../store/rodadasStore';
 import { filtrarMisRodadas, VistaMisRodadas } from '../../utils/asistencia';
 import { ordenarPorFecha } from '../../utils/filtros';
@@ -27,7 +28,29 @@ export default function MisRodadas() {
 
   // Mismo store que la pestaña Explorar: si confirmo allá, aparece acá sin hacer nada más.
   const rodadas = useRodadasStore((state) => state.rodadas);
+  const restablecerDatos = useRodadasStore((state) => state.restablecerDatos);
+  const borrarChecklists = useChecklistStore((state) => state.borrarTodo);
   const [vista, setVista] = useState<VistaMisRodadas>('voy');
+
+  // Los datos quedan guardados en el celular. Esto los vuelve al estado inicial
+  // (sirve para mostrar la app desde cero en una presentación).
+  const handleRestablecer = () => {
+    Alert.alert(
+      'Restablecer datos',
+      'Se borran las rodadas que creaste, tus asistencias y tus check-lists, y vuelven los datos de ejemplo.',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Restablecer',
+          style: 'destructive',
+          onPress: () => {
+            restablecerDatos();
+            borrarChecklists();
+          },
+        },
+      ],
+    );
+  };
 
   const misRodadas = ordenarPorFecha(filtrarMisRodadas(rodadas, USUARIO_ACTUAL.id, vista));
   const vistaActual = VISTAS.find((v) => v.id === vista)!;
@@ -57,6 +80,11 @@ export default function MisRodadas() {
             onPress={() => router.push({ pathname: '/rodada/[id]', params: { id: item.id } })}
           />
         )}
+        ListFooterComponent={
+          <BotonRestablecer onPress={handleRestablecer}>
+            <TextoRestablecer>Restablecer datos de ejemplo</TextoRestablecer>
+          </BotonRestablecer>
+        }
         ListEmptyComponent={
           <Vacio>
             <Ionicons name="bicycle-outline" size={48} color={theme.colores.textoTenue} />
@@ -109,4 +137,16 @@ const TextoVacio = styled.Text`
 const ContenedorBoton = styled.View`
   align-self: stretch;
   margin: 8px 24px 0 24px;
+`;
+
+const BotonRestablecer = styled.TouchableOpacity`
+  align-self: center;
+  margin-top: 24px;
+  padding: 8px;
+`;
+
+const TextoRestablecer = styled.Text`
+  font-size: 13px;
+  color: ${({ theme }) => theme.colores.textoTenue};
+  text-decoration-line: underline;
 `;

@@ -1,6 +1,7 @@
 // src/app/_layout.tsx
 // Layout raíz de Expo Router. Envuelve a TODAS las pantallas, por eso acá van:
 // - ThemeProvider: comparte el tema (colores) con todos los styled components.
+// - Espera a que se lean los datos guardados en AsyncStorage (useDatosCargados).
 // - QueryClientProvider: habilita TanStack Query (useQuery / useInfiniteQuery) en toda la app.
 // - Stack: navegación tipo pila (push agrega una pantalla arriba, back la saca).
 //
@@ -10,8 +11,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { ActivityIndicator, View } from 'react-native';
 import { ThemeProvider } from 'styled-components/native';
 
+import { useDatosCargados } from '../hooks/useDatosCargados';
 import { tema } from '../styles/theme';
 
 // El QueryClient guarda la caché de todas las consultas. Se crea UNA sola vez,
@@ -25,6 +28,16 @@ const queryClient = new QueryClient({
 });
 
 export default function RootLayout() {
+  // Hasta que no se leen los datos guardados en el celular, mostramos un spinner.
+  const datosCargados = useDatosCargados();
+  if (!datosCargados) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: tema.colores.fondo }}>
+        <ActivityIndicator size="large" color={tema.colores.primario} />
+      </View>
+    );
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={tema}>
@@ -34,6 +47,7 @@ export default function RootLayout() {
           <Stack.Screen name="crear" />
           <Stack.Screen name="rodada/[id]/index" />
           <Stack.Screen name="rodada/[id]/fotos" />
+          <Stack.Screen name="rodada/[id]/checklist" />
         </Stack>
       </ThemeProvider>
     </QueryClientProvider>

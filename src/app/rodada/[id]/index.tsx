@@ -1,5 +1,6 @@
 // src/app/rodada/[id]/index.tsx  →  ruta dinámica "/rodada/<id>"
-// Detalle de una rodada: datos, clima y fotos del destino (Feature 4) y asistencia (Feature 3).
+// Detalle de una rodada: datos, asistencia (Feature 3), clima y fotos (Feature 4)
+// y acceso al check-list de preparación (Feature 6).
 // Los corchetes en el nombre del archivo indican que "id" es un parámetro:
 // /rodada/1, /rodada/2, etc. abren esta misma pantalla con distinto id.
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -12,6 +13,7 @@ import Encabezado from '../../../components/Encabezado';
 import FilaAsistente from '../../../components/FilaAsistente';
 import InfoFila from '../../../components/InfoFila';
 import PortadaDestino from '../../../components/PortadaDestino';
+import ResumenChecklist from '../../../components/ResumenChecklist';
 import TarjetaClima from '../../../components/TarjetaClima';
 import VistaPreviaFotos from '../../../components/VistaPreviaFotos';
 import { USUARIO_ACTUAL } from '../../../data/usuario';
@@ -110,6 +112,15 @@ export default function DetalleRodada() {
         <Bloque>
           <TituloBloque>Cuándo</TituloBloque>
           <InfoFila icono="calendar-outline" texto={formatearFechaHora(rodada.fecha, rodada.hora)} />
+        </Bloque>
+
+        <Bloque>
+          <TituloBloque>Preparación</TituloBloque>
+          <ResumenChecklist
+            rodada={rodada}
+            participa={confirmado || organizo}
+            onAbrir={() => router.push({ pathname: '/rodada/[id]/checklist', params: { id: rodada.id } })}
+          />
         </Bloque>
 
         <Bloque>

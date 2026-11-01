@@ -14,6 +14,7 @@ export const tema = {
     textoSecundario: '#6E6E73',
     textoTenue: '#8E8E93',
     blanco: '#FFFFFF',
+    exito: '#2E7D32', // verde: check-list completo
   },
 };
 
